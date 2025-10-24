@@ -1,0 +1,138 @@
+/* ------------------ RESET ------------------ */
+* { box-sizing:border-box; margin:0; padding:0; }
+html, body { height:100%; transition: background 1.2s ease, color 0.8s ease; }
+
+/* ------------------ BASE ------------------ */
+body {
+  font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  color:#222;
+  min-height:100vh;
+  display:flex; flex-direction:column;
+  transition: background 1s ease, color 0.5s ease;
+}
+
+/* ------------------ CARDS ------------------ */
+.card {
+  padding:16px;
+  border-radius:14px;
+  box-shadow: 0 8px 22px rgba(8,10,20,0.12);
+  transition: transform 0.25s ease, background 0.4s ease;
+  position: relative; z-index: 5;
+}
+
+/* ------------------ FORM INPUTS ------------------ */
+input[type="text"], input[type="number"], select {
+  width:100%; padding:10px 12px; margin:8px 0; border-radius:10px; border:1px solid rgba(0,0,0,0.08);
+}
+
+/* ------------------ BUTTONS ------------------ */
+button.btn { cursor:pointer; border-radius:10px; font-size:0.95rem; }
+.btn.primary { background:#6b46ff; color:#fff; border:none; padding:10px; font-weight:600; }
+.btn.ghost { background:transparent; border:1px solid rgba(0,0,0,0.08); padding:10px; }
+.small { padding:6px 8px; font-size:0.9rem; }
+
+/* ------------------ TOPBAR ------------------ */
+.topbar {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:18px 24px; position:sticky; top:0; z-index:10;
+  background: rgba(255,255,255,0.12); backdrop-filter: blur(6px);
+}
+.topbar h1 { font-size:1.25rem; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2)); }
+.controls { display:flex; gap:10px; align-items:center; }
+select { background: rgba(255,255,255,0.9); }
+body.theme-stars select { background: rgba(255,255,255,0.08); color:#fff; }
+button { padding:8px 10px; border:none; }
+
+/* ------------------ CONTAINER ------------------ */
+.container { max-width:980px; margin:28px auto; width:100%; padding:0 18px; display:grid; gap:18px; }
+
+/* ------------------ SUMMARY ------------------ */
+.summary { display:flex; gap:18px; flex-wrap:wrap; align-items:flex-start; }
+.balance, .goal { flex:1 1 220px; }
+.big { font-size:1.6rem; font-weight:700; margin-top:8px; }
+.progress-wrap { width:100%; background:rgba(0,0,0,0.06); border-radius:10px; overflow:hidden; height:14px; margin-top:8px; }
+.progress-bar { width:0%; height:100%; background: linear-gradient(90deg,#6b46ff,#ff6b6b); transition:width 0.5s ease; }
+
+/* ------------------ EXPENSE LIST ------------------ */
+.expense-list { list-style:none; max-height:260px; overflow:auto; padding-right:6px; }
+.expense-list li {
+  display:flex; justify-content:space-between; align-items:center; padding:8px; border-radius:10px;
+  margin-bottom:8px; background: rgba(255,255,255,0.6);
+}
+body.theme-stars .expense-list li { background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.04); color:#e8f0ff; }
+
+/* ------------------ CHART ------------------ */
+.chart-wrap { width:100%; height:260px; display:flex; align-items:center; justify-content:center; }
+.chart-wrap, canvas { max-width:100% !important; height:auto !important; }
+
+/* ------------------ ANIMATIONS ------------------ */
+.card:hover { transform: translateY(-6px); }
+.expense-list li:hover { transform: translateX(6px); transition: transform 0.2s ease; }
+
+/* ------------------ MEDIA ------------------ */
+@media (max-width:780px){
+  .summary { flex-direction:column; }
+  .chart-wrap { height:220px; }
+}
+
+/* ------------------ THEMES ------------------ */
+:root{ --card-bg: rgba(255,255,255,0.88); --card-bg-dark: rgba(15,18,30,0.82); }
+
+/* Sunset Glow */
+body.theme-sunset {
+  background: linear-gradient(120deg,#ffb88c 0%, #fbd3e9 50%, #a18cd1 100%);
+  background-size: 400% 400%;
+  animation: moveGrad 14s ease infinite;
+  color:#222;
+}
+body.theme-sunset .card { background: var(--card-bg); }
+
+/* Starry Night */
+body.theme-stars {
+  background: radial-gradient(circle at 10% 20%, #0b1226 0%, #071029 50%, #000008 100%);
+  color:#eaf2ff;
+}
+body.theme-stars::before {
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, #fff, transparent),
+    radial-gradient(1px 1px at 80% 60%, #fff, transparent),
+    radial-gradient(1px 1px at 40% 80%, #fff, transparent);
+  background-size: 60px 60px;
+  opacity:0.12;
+  animation: twinkle 6s linear infinite;
+}
+body.theme-stars .card { background: var(--card-bg-dark); color: #eaf2ff; }
+
+/* Ocean Breeze */
+body.theme-ocean {
+  background: linear-gradient(120deg,#a1ffce 0%, #faffd1 50%, #c2e9fb 100%);
+  background-size: 300% 300%;
+  animation: moveGrad 18s ease infinite;
+  color:#04243e;
+}
+body.theme-ocean .card { background: var(--card-bg); }
+
+/* Candy Vibes */
+body.theme-candy {
+  background: linear-gradient(120deg,#ff9a9e 0%, #fecfef 25%, #f6d365 50%, #fda085 75%);
+  background-size: 400% 400%;
+  animation: moveGrad 20s ease infinite;
+  color:#2a1a2b;
+}
+body.theme-candy .card { background: var(--card-bg); }
+
+/* ------------------ KEYFRAMES ------------------ */
+@keyframes moveGrad {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes twinkle{
+  0%{opacity:0.08}
+  50%{opacity:0.18}
+  100%{opacity:0.08}
+}
+
+/* ------------------ SAFEGUARDS ------------------ */
+body[style] { transition: none !important; }
