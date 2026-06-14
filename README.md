@@ -42,38 +42,6 @@ Handling real-time data updates and user inputs
 Creating dynamic visualizations from structured data
 Improving UI/UX thinking in data-driven applications
 Structuring a complete end-to-end hackathon project
-📸 Demo / Screenshots
 
-✨ Add screenshots here (VERY IMPORTANT for this project)
 
-Recommended sections:
 
-Main dashboard (home screen)
-Expense input UI
-Category-wise charts
-Theme/background variations
-Analytics view
-⚙️ How to Run Locally
-# Clone the repository
-git clone https://github.com/ree-11/smart-expense-tracker.git
-
-# Navigate to project
-cd smart-expense-tracker
-
-# Install dependencies
-pip install streamlit pandas matplotlib
-
-# Run the app
-streamlit run app.py
-💡 Future Enhancements
-🔐 User login & personal dashboards
-☁️ Cloud database integration (multi-device sync)
-🤖 AI-based spending insights & predictions
-📊 Advanced financial reports (monthly/yearly trends)
-📱 Fully mobile-optimized UI
-💰 Budget planning + smart alerts
-
-🔗 Project Link
-
-GitHub Repository:
-https://github.com/ree-11/smart-expense-tracker
