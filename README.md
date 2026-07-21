@@ -1,14 +1,8 @@
-<p align="center">
-  <img src="assets/dashboard-preview.png" alt="FinSight Dashboard Preview" width="100%">
-</p>
+# FinSight
 
-<h1 align="center">FinSight</h1>
+A modern personal finance dashboard designed to help users track expenses, manage budgets, and gain meaningful insights into their spending habits through a clean and intuitive interface.
 
-<p align="center">
-A modern personal finance dashboard designed to help users track expenses, understand spending patterns, and manage budgets through a clean, intuitive, and interactive experience.
-</p>
-
-<p align="center">
+<p align="left">
   <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white"/>
   <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white"/>
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"/>
@@ -17,69 +11,48 @@ A modern personal finance dashboard designed to help users track expenses, under
 
 ---
 
-## Overview
+## 📖 Overview
 
-Managing personal finances shouldn't feel complicated.
+FinSight is a web-based personal finance dashboard that enables users to record daily expenses, organize transactions into categories, monitor spending patterns, and visualize financial data through an interactive and user-friendly interface.
 
-FinSight is a modern web application that simplifies everyday expense tracking through an intuitive interface, organized budgeting, and interactive data visualization. Instead of simply recording transactions, the application provides a clear overview of spending habits, helping users better understand where their money goes.
-
-The project was built with a strong focus on usability, clean design, and responsive front-end development while strengthening core JavaScript concepts and practical problem-solving skills.
+The project was developed with a strong focus on clean design, responsive layouts, and practical front-end development while strengthening core JavaScript concepts such as DOM manipulation, event handling, and browser storage.
 
 ---
 
-## Features
+## ✨ Features
 
-- Add, edit, and delete expenses
-- Organize transactions by category
-- Track total expenses and available balance
-- Interactive spending visualization
+- Track daily income and expenses
+- Add, edit, and delete transactions
+- Organize expenses by category
+- Monitor available balance in real time
+- Interactive expense visualization
 - Persistent data using Local Storage
-- Responsive layout for different screen sizes
-- Clean and intuitive user interface
-- Personalized dashboard experience
-- Smooth UI interactions and animations
+- Responsive design for desktop and mobile devices
+- Smooth and intuitive user experience
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 ### Frontend
-
 - HTML5
 - CSS3
 - JavaScript (ES6)
 
-### Data Handling
-
+### Storage
 - Local Storage
 
-### Development
-
+### Development Tools
 - Git
 - GitHub
-- VS Code
+- Visual Studio Code
 
 ---
 
-## Preview
-
-| Dashboard | Expense Tracking |
-|-----------|------------------|
-| *(Add Screenshot)* | *(Add Screenshot)* |
-
----
-
-## Live Demo
-
-🔗 https://riya-sharma-01.github.io/finsight/
-
----
-
-## Project Structure
+## 📂 Project Structure
 
 ```text
 finsight/
-│
 ├── assets/
 ├── index.html
 ├── style.css
@@ -90,40 +63,57 @@ finsight/
 
 ---
 
-## What I Learned
+## 🚀 Getting Started
 
-Building FinSight helped strengthen my understanding of:
+1. Clone the repository
+
+```bash
+git clone https://github.com/riya-sharma-01/finsight.git
+```
+
+2. Navigate to the project directory
+
+```bash
+cd finsight
+```
+
+3. Open `index.html` in your browser.
+
+---
+
+## 🎯 Learning Outcomes
+
+Through this project, I strengthened my understanding of:
 
 - JavaScript fundamentals
 - DOM manipulation
 - Event handling
 - Local Storage
 - Responsive web design
-- Writing maintainable front-end code
-- Version control using Git & GitHub
+- Git and GitHub workflow
+- Writing clean and maintainable front-end code
 
 ---
 
-## Future Improvements
+## 🔮 Future Enhancements
 
-- Expense filtering and search
-- Monthly analytics dashboard
+- Advanced expense filtering
+- Monthly and yearly reports
 - Budget goal tracking
-- Export data as CSV or PDF
-- Authentication
+- Export data as CSV/PDF
+- User authentication
 - Cloud database integration
 - AI-powered spending insights
 
 ---
 
-## Author
+## 👩‍💻 Author
 
 **Riya Sharma**
 
 B.Sc. Data Science & AI
 
-GitHub:
-https://github.com/riya-sharma-01
+GitHub: https://github.com/riya-sharma-01
 
 ---
 
