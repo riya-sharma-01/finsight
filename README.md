@@ -1,47 +1,130 @@
-💸 Smart Expense Tracker
+<p align="center">
+  <img src="assets/dashboard-preview.png" alt="FinSight Dashboard Preview" width="100%">
+</p>
 
-An interactive and visually rich Expense Tracker Web App built using Python and Streamlit, designed to make personal finance tracking both beautiful and intuitive.
+<h1 align="center">FinSight</h1>
 
-This project was developed during a hackathon with a focus on combining functionality + aesthetics + user experience, turning simple expense tracking into an engaging dashboard experience.
+<p align="center">
+A modern personal finance dashboard designed to help users track expenses, understand spending patterns, and manage budgets through a clean, intuitive, and interactive experience.
+</p>
 
-✨ Key Highlights
-🎨 Beautiful UI with themes and styling options
-🌈 Dynamic background changes for better visual experience
-📊 Interactive charts and real-time analytics
-➕ Add, categorize, and manage expenses effortlessly
-🧾 Clean and responsive dashboard layout
-📂 Export data for personal financial tracking
-⚡ Smooth and interactive Streamlit-based experience
-🚀 Features
-Add expenses with amount, category, date, and description
-Real-time visual breakdown of spending patterns
-Category-wise analytics with interactive graphs
-Custom UI themes for personalized experience
-Background and visual customization options
-Easy filtering and viewing of expense history
-Downloadable expense reports (CSV export)
-🎯 Problem It Solves
+<p align="center">
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white"/>
+  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white"/>
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"/>
+  <img src="https://img.shields.io/badge/Responsive-Yes-success?style=for-the-badge"/>
+</p>
 
-Managing expenses often feels boring and disconnected from real insights.
+---
 
-This app transforms that experience by:
+## Overview
 
-Making expense tracking visually engaging
-Helping users actually enjoy managing money
-Turning raw data into clear, interactive insights
-Providing a personalized dashboard experience
-🛠️ Tech Stack
-Python 🐍
-Streamlit ⚡
-Pandas 📊
-Matplotlib / Visualization Libraries 📈
-🧠 What I Learned
-Building fully interactive web apps using Streamlit
-Designing user-friendly and aesthetic dashboards
-Handling real-time data updates and user inputs
-Creating dynamic visualizations from structured data
-Improving UI/UX thinking in data-driven applications
-Structuring a complete end-to-end hackathon project
+Managing personal finances shouldn't feel complicated.
 
+FinSight is a modern web application that simplifies everyday expense tracking through an intuitive interface, organized budgeting, and interactive data visualization. Instead of simply recording transactions, the application provides a clear overview of spending habits, helping users better understand where their money goes.
 
+The project was built with a strong focus on usability, clean design, and responsive front-end development while strengthening core JavaScript concepts and practical problem-solving skills.
 
+---
+
+## Features
+
+- Add, edit, and delete expenses
+- Organize transactions by category
+- Track total expenses and available balance
+- Interactive spending visualization
+- Persistent data using Local Storage
+- Responsive layout for different screen sizes
+- Clean and intuitive user interface
+- Personalized dashboard experience
+- Smooth UI interactions and animations
+
+---
+
+## Tech Stack
+
+### Frontend
+
+- HTML5
+- CSS3
+- JavaScript (ES6)
+
+### Data Handling
+
+- Local Storage
+
+### Development
+
+- Git
+- GitHub
+- VS Code
+
+---
+
+## Preview
+
+| Dashboard | Expense Tracking |
+|-----------|------------------|
+| *(Add Screenshot)* | *(Add Screenshot)* |
+
+---
+
+## Live Demo
+
+🔗 https://riya-sharma-01.github.io/finsight/
+
+---
+
+## Project Structure
+
+```text
+finsight/
+│
+├── assets/
+├── index.html
+├── style.css
+├── script.js
+├── README.md
+└── LICENSE
+```
+
+---
+
+## What I Learned
+
+Building FinSight helped strengthen my understanding of:
+
+- JavaScript fundamentals
+- DOM manipulation
+- Event handling
+- Local Storage
+- Responsive web design
+- Writing maintainable front-end code
+- Version control using Git & GitHub
+
+---
+
+## Future Improvements
+
+- Expense filtering and search
+- Monthly analytics dashboard
+- Budget goal tracking
+- Export data as CSV or PDF
+- Authentication
+- Cloud database integration
+- AI-powered spending insights
+
+---
+
+## Author
+
+**Riya Sharma**
+
+B.Sc. Data Science & AI
+
+GitHub:
+https://github.com/riya-sharma-01
+
+---
+
+If you found this project interesting, feel free to explore the code, share feedback, or suggest improvements.
