@@ -11,18 +11,20 @@ The original project focused on recording expenses and displaying a basic catego
 ### Core features
 
 - Add income and expense transactions
-- Edit and delete transactions
+- Edit and delete transactions without losing the original record
+- Migrate legacy FinSight expense data into the new transaction model
 - Categorize transactions across 8 spending categories
 - Record transaction dates for time-based analysis
 - Calculate total income, total expenses, net balance, and average expense
-- Set and monitor a monthly spending goal
+- Set and monitor a current-month spending goal
 - Filter transactions by type and category
 - View category spending as a doughnut chart
 - View a six-month expense trend
-- Detect unusually large expenses using a statistical z-score style rule
+- Detect unusually large expenses using a statistical threshold
 - Generate explainable spending insights
 - Persist data in browser Local Storage
 - Responsive dashboard UI with theme selection
+- Automated smoke tests with Node.js and GitHub Actions
 
 ## Analytics logic
 
@@ -55,6 +57,8 @@ This is intentionally presented as a **signal**, not a claim of fraud or financi
 - **JavaScript ES6+** — state management, calculations, filtering and rendering
 - **Chart.js** — category and time-series visualizations
 - **Local Storage** — browser-side persistence
+- **Node.js test runner** — automated smoke tests
+- **GitHub Actions** — continuous testing on pushes and pull requests
 - **Git/GitHub** — version control and portfolio workflow
 
 ## Project structure
@@ -62,26 +66,35 @@ This is intentionally presented as a **signal**, not a claim of fraud or financi
 ```text
 finsight/
 ├── assets/
+├── tests/
+│   └── smoke.test.js
+├── .github/workflows/
+│   └── test.yml
 ├── index.html
 ├── style.css
 ├── script.js
+├── fixes.js
+├── package.json
 ├── README.md
 └── LICENSE
 ```
 
 ## Run locally
 
-No build system is required.
+No frontend build system is required.
 
 1. Clone the repository.
 2. Open the project folder.
-3. Open `index.html` in a modern browser.
+3. Run `npm test` to execute the automated smoke tests.
+4. Open `index.html` in a modern browser.
 
 The Chart.js library is loaded through a CDN, so an internet connection is recommended when running the dashboard.
 
 ## Data and privacy
 
 FinSight currently stores transactions only in the browser's Local Storage. No backend database or authentication is included in this version. Clearing the browser's site data can remove stored transactions.
+
+When upgrading from the original FinSight version, legacy expense records are migrated into the new transaction model. Because the old schema did not contain dates, migrated records receive the current local date rather than an invented historical date.
 
 ## Limitations
 
@@ -99,7 +112,6 @@ Possible future versions could add:
 - Recurring transactions
 - Backend API and database storage
 - Authentication
-- Automated tests
 - More advanced forecasting and anomaly detection
 - Deployment with a production data layer
 
@@ -112,8 +124,9 @@ This project demonstrates practical experience with:
 - Aggregation and derived metrics
 - Statistical reasoning
 - Data visualization
-- Client-side persistence
+- Client-side persistence and migration
 - Responsive interface design
+- Automated testing and CI
 - Git branching and incremental feature development
 
 ## Author
