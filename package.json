@@ -1,0 +1,13 @@
+{
+  "name": "finsight",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Personal finance intelligence dashboard",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
