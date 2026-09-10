@@ -1,225 +1,333 @@
-// ------------------ ELEMENTS ------------------
-const welcomeModal = document.getElementById('welcome-modal');
-const userNameInput = document.getElementById('user-name');
-const startBtn = document.getElementById('start-btn');
-const cancelName = document.getElementById('cancel-name');
-const greeting = document.getElementById('greeting');
-const editNameBtn = document.getElementById('edit-name');
+const $ = (id) => document.getElementById(id);
 
-const expenseForm = document.getElementById('expense-form');
-const expenseName = document.getElementById('name');
-const expenseAmount = document.getElementById('amount');
-const expenseCategory = document.getElementById('category');
-const expenseList = document.getElementById('expense-list');
+const welcomeModal = $('welcome-modal');
+const userNameInput = $('user-name');
+const startBtn = $('start-btn');
+const cancelName = $('cancel-name');
+const greeting = $('greeting');
+const editNameBtn = $('edit-name');
+const expenseForm = $('expense-form');
+const expenseName = $('name');
+const expenseAmount = $('amount');
+const transactionType = $('transaction-type');
+const expenseCategory = $('category');
+const transactionDate = $('transaction-date');
+const expenseList = $('expense-list');
+const emptyState = $('empty-state');
+const totalDisplay = $('expense-total');
+const incomeDisplay = $('income-total');
+const balanceDisplay = $('net-balance');
+const averageDisplay = $('average-expense');
+const transactionCount = $('transaction-count');
+const goalInput = $('goal-input');
+const progressBar = $('progress-bar');
+const goalText = $('goal-text');
+const clearBtn = $('clear-btn');
+const themeSelect = $('theme-select');
+const insightTitle = $('insight-title');
+const insightText = $('insight');
+const topCategoryDisplay = $('top-category');
+const topShareDisplay = $('top-share');
+const highestExpenseDisplay = $('highest-expense');
+const anomalyCountDisplay = $('anomaly-count');
+const filterType = $('filter-type');
+const filterCategory = $('filter-category');
+const filterSummary = $('filter-summary');
 
-const totalDisplay = document.getElementById('total');
-const goalInput = document.getElementById('goal-input');
-const progressBar = document.getElementById('progress-bar');
-const goalText = document.getElementById('goal-text');
-const clearBtn = document.getElementById('clear-btn');
-const themeSelect = document.getElementById('theme-select');
-
-
-// ------------------ DATA ------------------
-let expenses = [];
-let total = 0;
+const categories = ['Food', 'Travel', 'Entertainment', 'Shopping', 'Bills', 'Health', 'Education', 'Others'];
+const storageKey = 'finsightTransactions';
+let transactions = [];
 let goal = 0;
-let categoryTotals = { Food:0, Travel:0, Entertainment:0, Shopping:0, Others:0 };
+let expenseChart;
+let trendChart;
 
-// ------------------ CHART ------------------
-const ctx = document.getElementById('expenseChart').getContext('2d');
-const expenseChart = new Chart(ctx, {
-  type: 'pie',
-  data: {
-    labels: ['Food','Travel','Entertainment','Shopping','Others'],
-    datasets: [{ 
-      data:[0,0,0,0,0], 
-      backgroundColor: ['#FF6B6B','#4D96FF','#FFCE56','#8A2BE2','#FF7F50'] 
-    }]
-  },
-  options: { 
-    responsive:true, 
-    maintainAspectRatio:false, 
-    plugins:{legend:{position:'bottom'}} 
-  }
-});
+const currency = (value) => `₹${Number(value || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const today = () => new Date().toISOString().slice(0, 10);
 
-// ------------------ HELPERS ------------------
-function saveAll(){
-  localStorage.setItem('expenses', JSON.stringify(expenses));
-  localStorage.setItem('total', total);
-  localStorage.setItem('categoryTotals', JSON.stringify(categoryTotals));
-  localStorage.setItem('goal', goal);
-  localStorage.setItem('userName', localStorage.getItem('userName') || '');
-  localStorage.setItem('theme', document.body.className || '');
-}
-
-function loadAll(){
-  expenses = JSON.parse(localStorage.getItem('expenses')) || [];
-  total = parseFloat(localStorage.getItem('total')) || 0;
-  categoryTotals = JSON.parse(localStorage.getItem('categoryTotals')) || { Food:0, Travel:0, Entertainment:0, Shopping:0, Others:0 };
-  goal = parseFloat(localStorage.getItem('goal')) || 0;
-
-  const storedName = localStorage.getItem('userName');
-  if(storedName){
-    greeting.textContent = `${timeGreeting()}, ${storedName}!`;
-    hideModal();
-  } else showModal();
-
-  const storedTheme = localStorage.getItem('theme');
-  if(storedTheme && ['theme-sunset','theme-stars','theme-ocean','theme-candy'].includes(storedTheme)){
-    document.body.classList.remove('theme-sunset','theme-stars','theme-ocean','theme-candy');
-    document.body.classList.add(storedTheme);
-    themeSelect.value = storedTheme;
-  } else {
-    document.body.classList.add('theme-sunset');
-    themeSelect.value = 'theme-sunset';
-  }
-
-  if(goal>0) goalInput.value = goal;
-  updateExpenseList(); updateTotal(); updateProgressBar(); updateChart();
-}
-
-// ------------------ MODAL ------------------
-function showModal(){ welcomeModal.style.display = 'flex'; }
-function hideModal(){ welcomeModal.style.display = 'none'; }
-
-function timeGreeting(){
-  const h = new Date().getHours();
-  if(h < 12) return 'Good Morning';
-  if(h < 18) return 'Good Afternoon';
+function timeGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good Morning';
+  if (hour < 18) return 'Good Afternoon';
   return 'Good Evening';
 }
 
-// ------------------ EVENTS ------------------
-// Start button
+function showModal() { welcomeModal.style.display = 'flex'; }
+function hideModal() { welcomeModal.style.display = 'none'; }
+
+function saveAll() {
+  localStorage.setItem(storageKey, JSON.stringify(transactions));
+  localStorage.setItem('finsightGoal', String(goal));
+  localStorage.setItem('userName', localStorage.getItem('userName') || '');
+  localStorage.setItem('theme', document.body.className || 'theme-sunset');
+}
+
+function normaliseTransaction(item) {
+  return {
+    id: item.id || `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    name: String(item.name || 'Untitled'),
+    amount: Math.max(0, Number(item.amount) || 0),
+    category: categories.includes(item.category) ? item.category : 'Others',
+    type: item.type === 'income' ? 'income' : 'expense',
+    date: item.date || today()
+  };
+}
+
+function loadAll() {
+  try {
+    transactions = (JSON.parse(localStorage.getItem(storageKey)) || []).map(normaliseTransaction);
+  } catch {
+    transactions = [];
+  }
+
+  goal = Math.max(0, Number(localStorage.getItem('finsightGoal')) || Number(localStorage.getItem('goal')) || 0);
+  const storedName = localStorage.getItem('userName');
+  greeting.textContent = storedName ? `${timeGreeting()}, ${storedName}!` : 'FinSight';
+  if (storedName) hideModal(); else showModal();
+
+  const storedTheme = localStorage.getItem('theme');
+  const validThemes = ['theme-sunset', 'theme-stars', 'theme-ocean', 'theme-candy'];
+  const theme = validThemes.includes(storedTheme) ? storedTheme : 'theme-sunset';
+  document.body.className = theme;
+  themeSelect.value = theme;
+  if (goal > 0) goalInput.value = goal;
+  transactionDate.value = today();
+  populateCategoryFilter();
+  renderAll();
+}
+
+function populateCategoryFilter() {
+  filterCategory.innerHTML = '<option value="all">All categories</option>' + categories.map((category) => `<option value="${category}">${category}</option>`).join('');
+}
+
+function addTransaction(transaction) {
+  transactions.unshift(normaliseTransaction(transaction));
+  saveAll();
+  renderAll();
+}
+
+expenseForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const name = expenseName.value.trim();
+  const amount = Number(expenseAmount.value);
+  if (!name || !Number.isFinite(amount) || amount <= 0 || !transactionDate.value) {
+    alert('Please enter a valid description, amount and date.');
+    return;
+  }
+
+  addTransaction({
+    name,
+    amount,
+    category: expenseCategory.value,
+    type: transactionType.value,
+    date: transactionDate.value
+  });
+
+  expenseForm.reset();
+  transactionType.value = 'expense';
+  expenseCategory.value = 'Food';
+  transactionDate.value = today();
+});
+
+function deleteTransaction(id) {
+  const transaction = transactions.find((item) => item.id === id);
+  if (!transaction) return;
+  if (!confirm(`Delete "${transaction.name}" of ${currency(transaction.amount)}?`)) return;
+  transactions = transactions.filter((item) => item.id !== id);
+  saveAll();
+  renderAll();
+}
+
+function editTransaction(id) {
+  const transaction = transactions.find((item) => item.id === id);
+  if (!transaction) return;
+  expenseName.value = transaction.name;
+  expenseAmount.value = transaction.amount;
+  transactionType.value = transaction.type;
+  expenseCategory.value = transaction.category;
+  transactionDate.value = transaction.date;
+  transactions = transactions.filter((item) => item.id !== id);
+  saveAll();
+  renderAll();
+  expenseName.focus();
+}
+
+function getFilteredTransactions() {
+  return transactions.filter((item) => {
+    const matchesType = filterType.value === 'all' || item.type === filterType.value;
+    const matchesCategory = filterCategory.value === 'all' || item.category === filterCategory.value;
+    return matchesType && matchesCategory;
+  });
+}
+
+function renderTransactionList() {
+  const filtered = getFilteredTransactions();
+  expenseList.innerHTML = '';
+  emptyState.style.display = filtered.length ? 'none' : 'block';
+  filterSummary.textContent = `${filtered.length} of ${transactions.length} shown`;
+
+  filtered.slice(0, 100).forEach((transaction) => {
+    const li = document.createElement('li');
+    li.className = transaction.type === 'income' ? 'income-row' : '';
+    li.innerHTML = `
+      <div class="left"><strong>${escapeHtml(transaction.name)}</strong><small>${escapeHtml(transaction.category)} · ${formatDate(transaction.date)}</small></div>
+      <div class="right"><span class="${transaction.type === 'income' ? 'income-text' : 'expense-text'}">${transaction.type === 'income' ? '+' : '-'}${currency(transaction.amount)}</span><button class="edit-btn" data-id="${transaction.id}" aria-label="Edit transaction">Edit</button><button class="del-btn" data-id="${transaction.id}" aria-label="Delete transaction">Delete</button></div>`;
+    expenseList.appendChild(li);
+  });
+
+  expenseList.querySelectorAll('.del-btn').forEach((button) => button.addEventListener('click', () => deleteTransaction(button.dataset.id)));
+  expenseList.querySelectorAll('.edit-btn').forEach((button) => button.addEventListener('click', () => editTransaction(button.dataset.id)));
+}
+
+function escapeHtml(value) {
+  return value.replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
+}
+
+function formatDate(value) {
+  return new Date(`${value}T00:00:00`).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function calculateMetrics() {
+  const expenses = transactions.filter((item) => item.type === 'expense');
+  const income = transactions.filter((item) => item.type === 'income');
+  const expenseTotal = expenses.reduce((sum, item) => sum + item.amount, 0);
+  const incomeTotal = income.reduce((sum, item) => sum + item.amount, 0);
+  const categoryTotals = Object.fromEntries(categories.map((category) => [category, 0]));
+  expenses.forEach((item) => { categoryTotals[item.category] += item.amount; });
+  const sortedCategories = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]);
+  const topCategory = sortedCategories[0];
+  const highest = expenses.reduce((max, item) => Math.max(max, item.amount), 0);
+  const average = expenses.length ? expenseTotal / expenses.length : 0;
+  const anomalies = detectAnomalies(expenses);
+  return { expenses, expenseTotal, incomeTotal, balance: incomeTotal - expenseTotal, average, categoryTotals, topCategory, highest, anomalies };
+}
+
+function detectAnomalies(expenses) {
+  if (expenses.length < 4) return [];
+  const amounts = expenses.map((item) => item.amount);
+  const mean = amounts.reduce((sum, value) => sum + value, 0) / amounts.length;
+  const variance = amounts.reduce((sum, value) => sum + ((value - mean) ** 2), 0) / amounts.length;
+  const standardDeviation = Math.sqrt(variance);
+  if (!standardDeviation) return [];
+  return expenses.filter((item) => item.amount > mean + (2 * standardDeviation));
+}
+
+function renderMetrics() {
+  const metrics = calculateMetrics();
+  totalDisplay.textContent = currency(metrics.expenseTotal);
+  incomeDisplay.textContent = currency(metrics.incomeTotal);
+  balanceDisplay.textContent = currency(metrics.balance);
+  averageDisplay.textContent = currency(metrics.average);
+  transactionCount.textContent = transactions.length;
+
+  const [category, categoryAmount] = metrics.topCategory || ['—', 0];
+  topCategoryDisplay.textContent = categoryAmount ? category : '—';
+  topShareDisplay.textContent = metrics.expenseTotal ? `${Math.round((categoryAmount / metrics.expenseTotal) * 100)}%` : '0%';
+  highestExpenseDisplay.textContent = currency(metrics.highest);
+  anomalyCountDisplay.textContent = metrics.anomalies.length;
+
+  if (!transactions.length) {
+    insightTitle.textContent = 'Start building your data';
+    insightText.textContent = 'Add a few transactions and FinSight will identify your largest category, spending concentration, and unusual expenses.';
+  } else if (metrics.anomalies.length) {
+    insightTitle.textContent = `${metrics.anomalies.length} unusual expense${metrics.anomalies.length > 1 ? 's' : ''} detected`;
+    insightText.textContent = `Some transactions are more than two standard deviations above your average expense. Review them to understand whether they are one-off purchases or a recurring pattern.`;
+  } else if (metrics.topCategory && metrics.topCategory[1] > 0) {
+    const share = Math.round((metrics.topCategory[1] / metrics.expenseTotal) * 100);
+    insightTitle.textContent = `${metrics.topCategory[0]} is your biggest category`;
+    insightText.textContent = `${share}% of your recorded spending is in ${metrics.topCategory[0]}. Keep watching this category as your dataset grows.`;
+  }
+}
+
+function updateGoal() {
+  if (!goal) {
+    progressBar.style.width = '0%';
+    goalText.textContent = 'Goal not set';
+    return;
+  }
+  const spending = calculateMetrics().expenseTotal;
+  const percent = Math.min((spending / goal) * 100, 100);
+  progressBar.style.width = `${percent}%`;
+  goalText.textContent = `${currency(spending)} of ${currency(goal)} · ${Math.round(percent)}% used`;
+}
+
+goalInput.addEventListener('change', () => {
+  const value = Number(goalInput.value);
+  if (!Number.isFinite(value) || value <= 0) {
+    goal = 0;
+    goalInput.value = '';
+  } else {
+    goal = value;
+  }
+  saveAll();
+  updateGoal();
+});
+
+function updateCharts() {
+  const metrics = calculateMetrics();
+  const categoryValues = categories.map((category) => metrics.categoryTotals[category]);
+  const pieData = { labels: categories, datasets: [{ data: categoryValues, backgroundColor: ['#7c5cff', '#4d96ff', '#ffb84d', '#e56bff', '#34c38f', '#ff6b6b', '#4ecdc4', '#9aa0a6'], borderWidth: 2 }] };
+  if (expenseChart) expenseChart.destroy();
+  expenseChart = new Chart($('expenseChart'), { type: 'doughnut', data: pieData, options: { responsive: true, maintainAspectRatio: false, cutout: '62%', plugins: { legend: { position: 'bottom' } } } });
+
+  const months = getLastSixMonths();
+  const monthlyValues = months.map((month) => metrics.expenses.filter((item) => item.date.startsWith(month.key)).reduce((sum, item) => sum + item.amount, 0));
+  if (trendChart) trendChart.destroy();
+  trendChart = new Chart($('trendChart'), { type: 'line', data: { labels: months.map((month) => month.label), datasets: [{ label: 'Expenses', data: monthlyValues, borderWidth: 3, tension: 0.35, fill: true }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: (value) => `₹${Number(value).toLocaleString('en-IN')}` } } }, plugins: { legend: { display: false } } } });
+}
+
+function getLastSixMonths() {
+  const result = [];
+  const now = new Date();
+  for (let i = 5; i >= 0; i -= 1) {
+    const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    result.push({ key, label: date.toLocaleDateString('en-IN', { month: 'short' }) });
+  }
+  return result;
+}
+
+function renderAll() {
+  renderMetrics();
+  updateGoal();
+  renderTransactionList();
+  updateCharts();
+}
+
+filterType.addEventListener('change', renderTransactionList);
+filterCategory.addEventListener('change', renderTransactionList);
+
+clearBtn.addEventListener('click', () => {
+  if (!transactions.length && !goal) return;
+  if (!confirm('Clear all transactions and the spending goal?')) return;
+  transactions = [];
+  goal = 0;
+  goalInput.value = '';
+  saveAll();
+  renderAll();
+});
+
 startBtn.addEventListener('click', () => {
   const name = userNameInput.value.trim();
-  if(!name){ alert('Please enter your name'); return; }
+  if (!name) return alert('Please enter your name.');
   localStorage.setItem('userName', name);
   greeting.textContent = `${timeGreeting()}, ${name}!`;
   hideModal();
   saveAll();
 });
 
-// Cancel name
 cancelName.addEventListener('click', () => {
-  if(localStorage.getItem('userName')) hideModal();
+  if (localStorage.getItem('userName')) hideModal();
   else userNameInput.value = '';
 });
 
-// Edit name
 editNameBtn.addEventListener('click', () => {
   userNameInput.value = localStorage.getItem('userName') || '';
   showModal();
 });
 
-// Add expense
-expenseForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const name = expenseName.value.trim();
-  const amount = parseFloat(expenseAmount.value);
-  const category = expenseCategory.value;
-  if(!name || isNaN(amount) || amount <= 0){ alert('Enter valid description and amount'); return; }
-
-  expenses.push({ name, amount, category });
-  total += amount;
-  categoryTotals[category] = (categoryTotals[category] || 0) + amount;
-
+themeSelect.addEventListener('change', (event) => {
+  document.body.className = event.target.value;
   saveAll();
-  updateExpenseList(); updateTotal(); updateProgressBar(); updateChart();
-
-  expenseName.value = ''; expenseAmount.value = ''; expenseCategory.value = 'Food';
 });
 
-// Update list
-function updateExpenseList(){
-  expenseList.innerHTML = '';
-  expenses.forEach((exp, idx)=>{
-    const li = document.createElement('li');
-    li.innerHTML = `<div class="left"><strong>${exp.name}</strong><small> • ${exp.category}</small></div>
-                    <div class="right"><span>₹${exp.amount.toFixed(2)}</span>
-                    <button class="edit-btn" data-i="${idx}">✏️</button>
-                    <button class="del-btn" data-i="${idx}">❌</button></div>`;
-    expenseList.appendChild(li);
-  });
-
-  document.querySelectorAll('.del-btn').forEach(b => b.onclick = function(){ deleteExpense(parseInt(this.dataset.i)); });
-  document.querySelectorAll('.edit-btn').forEach(b => b.onclick = function(){ editExpense(parseInt(this.dataset.i)); });
-}
-
-// Delete expense
-function deleteExpense(i){
-  const exp = expenses[i];
-  if(!exp) return;
-  if(confirm(`Delete "${exp.name}" of ₹${exp.amount.toFixed(2)}?`)){
-    total -= exp.amount;
-    categoryTotals[exp.category] -= exp.amount;
-    expenses.splice(i,1);
-    saveAll(); updateExpenseList(); updateTotal(); updateProgressBar(); updateChart();
-  }
-}
-
-// Edit expense
-function editExpense(i){
-  const exp = expenses[i];
-  if(!exp) return;
-  expenseName.value = exp.name;
-  expenseAmount.value = exp.amount;
-  expenseCategory.value = exp.category;
-
-  total -= exp.amount;
-  categoryTotals[exp.category] -= exp.amount;
-  expenses.splice(i,1);
-
-  saveAll(); updateExpenseList(); updateTotal(); updateProgressBar(); updateChart();
-}
-
-// Totals & goal
-function updateTotal(){ totalDisplay.textContent = `₹${total.toFixed(2)}`; }
-
-goalInput.addEventListener('change', () => {
-  const v = parseFloat(goalInput.value);
-  if(!isNaN(v) && v>0){ goal = v; saveAll(); updateProgressBar(); }
-  else { alert('Enter valid goal'); goalInput.value = ''; }
-});
-
-function updateProgressBar(){
-  if(goal===0){ progressBar.style.width='0%'; goalText.textContent='Goal not set'; return; }
-  let pct = (total/goal)*100; if(pct>100) pct=100;
-  progressBar.style.width = pct + '%';
-  goalText.textContent = `You've used ₹${total.toFixed(2)} of ₹${goal}`;
-}
-
-// Update chart
-function updateChart(){
-  expenseChart.data.datasets[0].data = [
-    categoryTotals.Food || 0,
-    categoryTotals.Travel || 0,
-    categoryTotals.Entertainment || 0,
-    categoryTotals.Shopping || 0,
-    categoryTotals.Others || 0
-  ];
-  expenseChart.update();
-}
-
-// Clear all
-clearBtn.addEventListener('click', ()=>{
-  if(confirm('Clear all expenses?')){
-    expenses=[]; total=0; goal=0;
-    categoryTotals = { Food:0, Travel:0, Entertainment:0, Shopping:0, Others:0 };
-    saveAll(); updateExpenseList(); updateTotal(); updateProgressBar(); updateChart();
-    goalInput.value=''; expenseName.value=''; expenseAmount.value=''; expenseCategory.value='Food';
-  }
-});
-
-// Theme switch
-themeSelect.addEventListener('change', (e)=>{
-  const cls = e.target.value;
-  document.body.classList.remove('theme-sunset','theme-stars','theme-ocean','theme-candy');
-  document.body.classList.add(cls);
-  localStorage.setItem('theme', cls);
-});
-
-// ------------------ INITIAL LOAD ------------------
 loadAll();
