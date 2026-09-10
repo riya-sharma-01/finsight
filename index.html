@@ -3,93 +3,85 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Smart Expense Tracker 💫</title>
-
-  <!-- Chart.js -->
+  <meta name="description" content="FinSight — a personal finance dashboard with spending analytics and intelligent insights." />
+  <title>FinSight — Personal Finance Intelligence</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <!-- WELCOME MODAL -->
+<body class="theme-sunset">
   <div id="welcome-modal" class="modal">
     <div class="modal-content">
-      <h2 id="modal-greeting">Welcome! 🌸</h2>
-      <p>Enter your name to start tracking:</p>
-      <input id="user-name" type="text" placeholder="Your name" />
+      <h2 id="modal-greeting">Welcome to FinSight</h2>
+      <p>Enter your name to personalize your dashboard:</p>
+      <input id="user-name" type="text" placeholder="Your name" maxlength="40" autocomplete="name" />
       <div class="modal-actions">
-        <button id="start-btn" class="btn primary">Start Tracking</button>
+        <button id="start-btn" class="btn primary">Start</button>
         <button id="cancel-name" class="btn ghost">Cancel</button>
       </div>
     </div>
   </div>
 
-  <!-- TOP BAR -->
   <header class="topbar">
-    <h1 id="greeting">💫 Smart Expense Tracker</h1>
+    <div>
+      <p class="eyebrow">PERSONAL FINANCE INTELLIGENCE</p>
+      <h1 id="greeting">FinSight</h1>
+    </div>
     <div class="controls">
       <select id="theme-select" aria-label="Select theme">
-        <option value="theme-sunset">🌅 Sunset Glow</option>
-        <option value="theme-stars">🌌 Starry Night</option>
-        <option value="theme-ocean">🌊 Ocean Breeze</option>
-        <option value="theme-candy">🍭 Candy Vibes</option>
+        <option value="theme-sunset">Sunset Glow</option>
+        <option value="theme-stars">Starry Night</option>
+        <option value="theme-ocean">Ocean Breeze</option>
+        <option value="theme-candy">Candy Vibes</option>
       </select>
-      <button id="edit-name" class="btn small">✏️ Change Name</button>
+      <button id="edit-name" class="btn small">Change Name</button>
     </div>
   </header>
 
-  <!-- MAIN -->
   <main class="container">
-    <!-- Add Expense -->
-    <form id="expense-form" class="card">
-      <h2>Add Transaction</h2>
-      <input id="name" type="text" placeholder="Description (e.g., Pizza)" required />
-      <input id="amount" type="number" placeholder="Amount (₹)" required />
-      <select id="category">
-        <option value="Food">🍕 Food</option>
-        <option value="Travel">🚗 Travel</option>
-        <option value="Entertainment">🎬 Entertainment</option>
-        <option value="Shopping">🛍️ Shopping</option>
-        <option value="Others">🧾 Others</option>
-      </select>
-      <div class="row">
-        <button type="submit" class="btn primary">➕ Add</button>
-        <button id="clear-btn" type="button" class="btn ghost">🧹 Clear All</button>
-      </div>
-    </form>
+    <section class="hero card">
+      <div><span class="pill">Dashboard</span><h2>Know where your money goes.</h2><p>Track transactions, understand spending patterns, and get data-driven signals before small expenses become big ones.</p></div>
+      <div class="hero-stat"><span>Transactions</span><strong id="transaction-count">0</strong></div>
+    </section>
 
-    <!-- Summary -->
+    <section class="kpi-grid">
+      <article class="card kpi"><span>Total Income</span><strong id="income-total">₹0.00</strong><small>Recorded income</small></article>
+      <article class="card kpi"><span>Total Expenses</span><strong id="expense-total">₹0.00</strong><small>Recorded spending</small></article>
+      <article class="card kpi"><span>Net Balance</span><strong id="net-balance">₹0.00</strong><small>Income − expenses</small></article>
+      <article class="card kpi"><span>Avg. Expense</span><strong id="average-expense">₹0.00</strong><small>Per expense transaction</small></article>
+    </section>
+
+    <section class="card form-card">
+      <div class="section-heading"><div><p class="eyebrow">DATA ENTRY</p><h3>Add Transaction</h3></div><span class="hint">All fields are stored locally</span></div>
+      <form id="expense-form" class="transaction-form">
+        <input id="name" type="text" placeholder="Description (e.g., Groceries)" maxlength="80" required />
+        <input id="amount" type="number" min="0.01" step="0.01" placeholder="Amount (₹)" required />
+        <select id="transaction-type" aria-label="Transaction type"><option value="expense">Expense</option><option value="income">Income</option></select>
+        <select id="category" aria-label="Transaction category"><option value="Food">Food</option><option value="Travel">Travel</option><option value="Entertainment">Entertainment</option><option value="Shopping">Shopping</option><option value="Bills">Bills</option><option value="Health">Health</option><option value="Education">Education</option><option value="Others">Others</option></select>
+        <input id="transaction-date" type="date" aria-label="Transaction date" required />
+        <div class="row"><button type="submit" class="btn primary">Add Transaction</button><button id="clear-btn" type="button" class="btn ghost">Clear All</button></div>
+      </form>
+    </section>
+
     <section class="card summary">
-      <div class="balance">
-        <h3>Total Balance</h3>
-        <div id="total" class="big">₹0.00</div>
-        <p id="insight" class="insight">Start adding expenses!</p>
-      </div>
-      <div class="goal">
-        <h3>Monthly Goal</h3>
-        <input id="goal-input" type="number" placeholder="Set goal amount (₹)" />
-        <div class="progress-wrap"><div id="progress-bar" class="progress-bar"></div></div>
-        <div id="goal-text" class="goal-text">Goal not set</div>
-      </div>
+      <div class="goal"><div class="section-heading"><div><p class="eyebrow">BUDGET CONTROL</p><h3>Monthly Spending Goal</h3></div></div><input id="goal-input" type="number" min="1" step="1" placeholder="Set monthly goal (₹)" /><div class="progress-wrap"><div id="progress-bar" class="progress-bar"></div></div><div id="goal-text" class="goal-text">Goal not set</div></div>
+      <div class="insight-panel"><p class="eyebrow">INTELLIGENT INSIGHT</p><h3 id="insight-title">Start building your data</h3><p id="insight">Add a few transactions and FinSight will identify your largest category, spending concentration, and unusual expenses.</p></div>
     </section>
 
-    <!-- Transactions -->
-    <section class="card">
-      <h3>Transactions</h3>
-      <ul id="expense-list" class="expense-list"></ul>
+    <section class="analytics-grid">
+      <article class="card chart-card"><div class="section-heading"><div><p class="eyebrow">CATEGORY ANALYSIS</p><h3>Where you spend</h3></div></div><div class="chart-wrap"><canvas id="expenseChart"></canvas></div></article>
+      <article class="card chart-card"><div class="section-heading"><div><p class="eyebrow">TIME SERIES</p><h3>Monthly trend</h3></div></div><div class="chart-wrap"><canvas id="trendChart"></canvas></div></article>
     </section>
 
-    <!-- Chart -->
+    <section class="card analytics-summary"><div><span>Top category</span><strong id="top-category">—</strong></div><div><span>Top category share</span><strong id="top-share">0%</strong></div><div><span>Highest expense</span><strong id="highest-expense">₹0.00</strong></div><div><span>Unusual transactions</span><strong id="anomaly-count">0</strong></div></section>
+
     <section class="card">
-      <h3>Expense Breakdown</h3>
-      <div class="chart-wrap">
-        <canvas id="expenseChart"></canvas>
-      </div>
+      <div class="section-heading"><div><p class="eyebrow">TRANSACTION LOG</p><h3>Recent transactions</h3></div><span id="filter-summary" class="hint">Showing all</span></div>
+      <div class="filter-row"><select id="filter-type"><option value="all">All types</option><option value="expense">Expenses</option><option value="income">Income</option></select><select id="filter-category"><option value="all">All categories</option></select></div>
+      <ul id="expense-list" class="expense-list"></ul><p id="empty-state" class="empty-state">No transactions yet. Add your first one above.</p>
     </section>
   </main>
 
-  <!-- JS -->
   <script src="script.js"></script>
+  <script src="fixes.js"></script>
 </body>
 </html>
